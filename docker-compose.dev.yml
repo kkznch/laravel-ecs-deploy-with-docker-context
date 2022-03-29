@@ -1,0 +1,34 @@
+# NOTE: VPCのIDを指定する
+x-aws-vpc: YOUR_VPC_ID
+
+# NOTE: ECSクラスター名を指定する
+x-aws-cluster: YOUR_ECS_CLUSTER_NAME
+
+# NOTE: ALBのARNを指定する
+x-aws-loadbalancer: YOUR_ALB_ARN
+
+services:
+  app:
+    # NOTE: ECR(app)のARNを指定する
+    image: YOURE_ECR_APP_ARN
+    build:
+      context: .
+      dockerfile: ./docker/dev/php-fpm/Dockerfile
+  web:
+    # NOTE: ECR(web)のARNを指定する
+    image: YOURE_ECR_WEB_ARN
+    build:
+      context: .
+      dockerfile: ./docker/dev/nginx/Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - app
+
+networks:
+  default:
+    external: true
+    # NOTE: ECS用セキュリティグループのIDを指定する
+    name: YOUR_SECURITY_GROUP_ID
+
+
